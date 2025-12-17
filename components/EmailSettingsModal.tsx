@@ -34,7 +34,6 @@ export default function EmailSettingsModal({ isOpen, onClose, onSuccess }: Email
       [name]: type === 'checkbox' ? checked : value
     }));
     
-    // Auto-fill username with email if empty
     if (name === 'email' && !formData.username) {
       setFormData(prev => ({
         ...prev,

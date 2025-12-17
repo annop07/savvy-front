@@ -8,7 +8,6 @@ import Link from 'next/link';
 import { FaQuestionCircle, FaServer, FaKey, FaEnvelope, FaCog, FaSave, FaShieldAlt, FaSync, FaFolder, FaPencilAlt, FaTrash, FaPlus, FaCheck, FaTimes, FaSpinner } from 'react-icons/fa';
 import { getImapSettings, getCategories, syncEmails, createImapSetting } from '@/lib/api';
 
-// Define interfaces for our data
 interface ImapSetting {
     id: number;
     user_id: number;
@@ -49,13 +48,11 @@ function SettingPage() {
     const [formError, setFormError] = useState<string | null>(null);
     const [formSuccess, setFormSuccess] = useState<string | null>(null);
 
-    // เพิ่มตัวแปร state สำหรับการตั้งค่าการซิงค์
     const [syncSettings, setSyncSettings] = useState({
         daysBack: 30,
         limit: 50
     });
 
-    // เพิ่มฟังก์ชันสำหรับการจัดการการเปลี่ยนแปลงค่าในฟอร์ม
     const handleSyncSettingsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setSyncSettings(prev => ({
@@ -64,17 +61,14 @@ function SettingPage() {
         }));
     };
 
-    // Fetch IMAP settings and categories when component mounts
     useEffect(() => {
         const fetchData = async () => {
             try {
                 setLoading(true);
 
-                // Fetch IMAP settings
                 const imapData = await getImapSettings();
                 setImapSettings(imapData);
 
-                // Fetch categories
                 const categoriesData = await getCategories();
                 setCategories(categoriesData);
 
@@ -100,7 +94,6 @@ function SettingPage() {
         fetchData();
     }, []);
 
-    // Handle form input changes
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
         setFormData(prev => ({
@@ -108,7 +101,6 @@ function SettingPage() {
             [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
         }));
 
-        // Auto-fill username with email if empty
         if (name === 'email' && !formData.username) {
             setFormData(prev => ({
                 ...prev,
@@ -117,7 +109,6 @@ function SettingPage() {
         }
     };
 
-    // Handle server preset selection
     const handleServerPreset = (preset: string) => {
         switch (preset) {
             case 'gmail':
@@ -147,7 +138,6 @@ function SettingPage() {
         }
     };
 
-    // Handle form submission to create new IMAP setting
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setFormError(null);
@@ -155,7 +145,6 @@ function SettingPage() {
         setIsSubmitting(true);
 
         try {
-            // Call API to create IMAP setting
             const response = await createImapSetting({
                 email: formData.email,
                 server: formData.server,
@@ -166,10 +155,8 @@ function SettingPage() {
                 folder: formData.folder
             });
 
-            // Update local state
             setImapSettings(prev => [...prev, response]);
 
-            // Reset form
             setFormData({
                 email: '',
                 password: '',
@@ -195,7 +182,6 @@ function SettingPage() {
         }
     };
 
-    // แก้ไขฟังก์ชัน handleSyncEmail ให้ส่งค่าที่กำหนด
     const handleSyncEmail = async (imapId: number) => {
         setSyncingEmail(imapId);
         

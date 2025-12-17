@@ -31,18 +31,14 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
     setLoading(true);
 
     try {
-      // เรียกใช้ API ล็อกอิน
       const response = await loginUser(formData.email, formData.password);
       
-      // ใช้ AuthContext เพื่อล็อกอิน
       await login(response.access_token);
       
-      // ปิด modal และนำทางไปยังหน้า dashboard
       onClose();
       router.push('/user/dashboard');
     } catch (err: any) {
       console.error("Login error:", err);
-      // จัดการข้อผิดพลาด
       if (err.response && err.response.data) {
         setError(err.response.data.detail || 'อีเมลหรือรหัสผ่านไม่ถูกต้อง');
       } else {
@@ -58,7 +54,6 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="relative w-full max-w-md">
-        {/* Close button */}
         <button
           onClick={onClose}
           className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 z-10"

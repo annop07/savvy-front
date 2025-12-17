@@ -1,9 +1,7 @@
-// แสดงรายการค่าใช้จ่ายล่าสุด 5 รายการ
 "use client";
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 
-// Recent expense item component
 interface ExpenseItemProps {
   description: string;
   amount: number;

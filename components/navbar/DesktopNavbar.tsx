@@ -25,7 +25,6 @@ const DesktopNavbar = () => {
     setIsRegisterModalOpen(false);
   };
 
-  // Listen for custom events to switch between modals
   useEffect(() => {
     const handleOpenLoginModal = () => {
       setIsLoginModalOpen(true);
@@ -48,7 +47,6 @@ const DesktopNavbar = () => {
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 bg-transparent px-6 py-4">
         <div className="max-w-[100rem] mx-auto flex items-center justify-between">
-          {/* Logo on the left */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center">
               <span className="text-[#000] text-3xl font-bold tracking-tight bg-gradient-to-r from-[#2F584F] to-[#8CA29D] bg-clip-text text-transparent hover:from-[#8CA29D] hover:to-[#2F584F] transition-all duration-300">savvy</span>
@@ -83,7 +81,6 @@ const DesktopNavbar = () => {
         </div>
       </nav>
 
-      {/* Auth Modals */}
       <LoginModal
         isOpen={isLoginModalOpen}
         onClose={closeLoginModal}

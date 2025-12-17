@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent } from '@/components/ui/card';
 import { RegisterModalProps } from '@/types';
-import { registerUser } from '@/lib/api'; // นำเข้าฟังก์ชัน API
+import { registerUser } from '@/lib/api';
 
 export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModalProps) {
   const router = useRouter();
@@ -31,7 +31,6 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
     setError('');
     setLoading(true);
     
-    // ตรวจสอบรหัสผ่าน
     if (formData.password !== formData.confirmPassword) {
       setError('รหัสผ่านไม่ตรงกัน');
       setLoading(false);
@@ -39,7 +38,6 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
     }
     
     try {
-      // เรียกใช้ API ลงทะเบียนผู้ใช้
       await registerUser({
         username: formData.username,
         email: formData.email,
@@ -47,17 +45,14 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
         full_name: formData.full_name || undefined
       });
       
-      // ปิด modal และแสดงข้อความสำเร็จ
       onClose();
       
-      // สร้าง event เพื่อเปิด login modal
       if (onSwitchToLogin) {
         onSwitchToLogin();
       }
       
     } catch (err: any) {
       console.error("Registration error:", err);
-      // จัดการข้อผิดพลาด
       if (err.response && err.response.data) {
         setError(err.response.data.detail || 'เกิดข้อผิดพลาดในการลงทะเบียน');
       } else {
@@ -73,7 +68,6 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="relative w-full max-w-md">
-        {/* Close button */}
         <button 
           onClick={onClose}
           className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 z-10"

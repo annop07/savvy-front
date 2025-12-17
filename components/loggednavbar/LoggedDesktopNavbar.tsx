@@ -14,28 +14,17 @@ import { FiLogOut } from "react-icons/fi";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSackDollar } from '@fortawesome/free-solid-svg-icons';
 
-// Remove the hook call at module level
-// const pathname = usePathname();
-
-// Remove the function at module level
-// const isActive = (path:any) => {
-//    return pathname === path;
-//  };
-
 const LoggedDesktopNavbar = () => {
     const [open, setOpen] = useState(false);
     const [showSettingsMenu, setShowSettingsMenu] = useState(false);
     const [showEmailModal, setShowEmailModal] = useState(false);
     const settingsMenuRef = useRef<HTMLDivElement>(null);
-    // Move the usePathname hook inside the component
     const pathname = usePathname();
 
-    // Move the isActive function inside the component
     const isActive = (path: any) => {
         return pathname === path;
     };
 
-    // Close settings menu when clicking outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (settingsMenuRef.current && !settingsMenuRef.current.contains(event.target as Node)) {
@@ -50,9 +39,7 @@ const LoggedDesktopNavbar = () => {
     }, []);
 
     const handleLogout = () => {
-        // Implement logout functionality here
         console.log('Logging out...');
-        // Redirect to login page or home page
         window.location.href = '/';
     };
 
@@ -119,7 +106,6 @@ const LoggedDesktopNavbar = () => {
                 </div>
             </div>
 
-            {/* Email Settings Modal */}
             <EmailSettingsModal
                 isOpen={showEmailModal}
                 onClose={() => setShowEmailModal(false)}

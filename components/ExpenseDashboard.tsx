@@ -20,7 +20,6 @@ import {
   getReceipts
 } from '@/lib/api';
 
-// Define interfaces
 interface Expense {
   id: string;
   description: string;
@@ -50,15 +49,10 @@ interface BudgetItem {
 }
 
 export default function Dashboard() {
-  // คำสั่ง console.log เพื่อตรวจสอบการทำงาน
-  console.log("Dashboard component initialized");
-  
-  // States for data
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [timeFrame, setTimeFrame] = useState<'daily' | 'weekly' | 'monthly' | 'yearly'>('monthly');
   
-  // States for the actual data
   const [recentExpenses, setRecentExpenses] = useState<Expense[]>([]);
   const [categoryData, setCategoryData] = useState<CategoryData>({
     labels: ["ยังไม่มีข้อมูล"],
@@ -69,20 +63,17 @@ export default function Dashboard() {
   });
   const [budgetData, setBudgetData] = useState<BudgetItem[]>([]);
   
-  // Time frame data (daily, weekly, monthly, yearly)
   const [timeFrameData, setTimeFrameData] = useState<TimeFrameData>({
     labels: [],
     values: []
   });
   
-  // Dashboard summary data
   const [summaryData, setSummaryData] = useState({
     todayExpense: 0,
     totalReceipts: 0,
     averageDaily: 0
   });
   
-  // For category-specific data
   const [activeTab, setActiveTab] = useState('overview');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [categories, setCategories] = useState<{id: number, name: string}[]>([]);
@@ -90,7 +81,6 @@ export default function Dashboard() {
     [key: string]: TimeFrameData
   }>({});
 
-  // Debug state
   const [debugInfo, setDebugInfo] = useState<{
     hasCategories: boolean;
     categoryCount: number;
@@ -103,24 +93,16 @@ export default function Dashboard() {
     categoryExpenseCount: 0
   });
 
-  // Fetch data when component mounts or timeFrame changes
   useEffect(() => {
-    console.log("Fetching data with timeFrame:", timeFrame);
     fetchData();
   }, [timeFrame]);
 
-  // Function to fetch all necessary data
   const fetchData = async () => {
     try {
       setLoading(true);
-      console.log("Starting to fetch data...");
 
-      // 1. Get all categories
-      console.log("Fetching categories...");
       const categoriesData = await getCategories();
-      console.log("Categories data:", categoriesData);
       
-      // Store debug info
       setDebugInfo(prev => ({
         ...prev,
         hasCategories: Array.isArray(categoriesData) && categoriesData.length > 0,
@@ -128,85 +110,59 @@ export default function Dashboard() {
       }));
       
       setCategories([
-        { id: 0, name: 'ทุกหมวดหมู่' }, // Add "all" option
+        { id: 0, name: 'ทุกหมวดหมู่' },
         ...categoriesData
       ]);
 
-      // 2. Get monthly expenses for time frame data
-      console.log("Fetching monthly expenses...");
       let monthsToFetch = 12;
       if (timeFrame === 'daily') monthsToFetch = 1;
       else if (timeFrame === 'weekly') monthsToFetch = 3;
-      else if (timeFrame === 'yearly') monthsToFetch = 60; // 5 years
+      else if (timeFrame === 'yearly') monthsToFetch = 60;
 
       const expensesData = await getMonthlyExpenses(undefined, monthsToFetch);
-      console.log("Monthly expenses data:", expensesData);
       
-      // 3. Get category expenses data
-      console.log("Fetching category expenses...");
       const categoryExpenses = await getCategoryExpenses();
-      console.log("Category expenses data:", categoryExpenses);
 
-      // Store debug info
       setDebugInfo(prev => ({
         ...prev,
         hasCategoryExpenses: Array.isArray(categoryExpenses) && categoryExpenses.length > 0,
         categoryExpenseCount: Array.isArray(categoryExpenses) ? categoryExpenses.length : 0
       }));
       
-      // 4. Get analytics summary
-      console.log("Fetching analytics summary...");
       const summary = await getAnalyticsSummary();
-      console.log("Summary data:", summary);
       
-      // 5. Get recent receipts for the expenses list
-      console.log("Fetching recent receipts...");
       const receiptsData = await getReceipts({ limit: 5 });
-      console.log("Receipts data:", receiptsData);
       
-      // Process the data
-      console.log("Processing time frame data...");
-      
-      // Process time frame data
       let labels: string[] = [];
       let values: number[] = [];
       
       switch (timeFrame) {
         case 'daily':
-          // For daily, we'll use the last 7 days
-          // In real implementation, you'd have daily data from API
-          // Here we're simulating it based on monthly data
           labels = Array(7).fill(null).map((_, i) => {
             const date = new Date();
             date.setDate(date.getDate() - 6 + i);
             return date.toLocaleDateString('th-TH', { weekday: 'short' });
           });
           
-          // Distribute monthly total across days with some randomness
           const monthlyTotal = expensesData[0]?.total || 0;
           const dailyAvg = monthlyTotal / 30;
           values = labels.map(() => Math.round(dailyAvg * (0.7 + Math.random() * 0.6)));
           break;
           
         case 'weekly':
-          // For weekly, we'll use the last 4 weeks
-          // Similar to daily, simulating based on monthly data
           labels = Array(4).fill(null).map((_, i) => `สัปดาห์ ${i + 1}`);
           
-          // Distribute monthly total across weeks with some randomness
           const monthTotal = expensesData[0]?.total || 0;
           const weeklyAvg = monthTotal / 4;
           values = labels.map(() => Math.round(weeklyAvg * (0.8 + Math.random() * 0.4)));
           break;
           
         case 'monthly':
-          // Use actual monthly data from API
           labels = expensesData.map(item => item.month_name);
           values = expensesData.map(item => item.total);
           break;
           
         case 'yearly':
-          // Group monthly data by year
           const yearlyData: {[key: string]: number} = {};
           expensesData.forEach(item => {
             const year = item.year.toString();
@@ -214,7 +170,6 @@ export default function Dashboard() {
             yearlyData[year] += item.total;
           });
           
-          // Convert to arrays for chart
           const years = Object.keys(yearlyData).sort();
           labels = years;
           values = years.map(year => yearlyData[year]);
@@ -223,11 +178,7 @@ export default function Dashboard() {
       
       setTimeFrameData({ labels, values });
       
-      console.log("Processing category data...");
-      
-      // Process category data for pie chart
       if (Array.isArray(categoryExpenses) && categoryExpenses.length > 0) {
-        // Normalize category expenses data structure
         const processedCategoryExpenses = categoryExpenses.map(cat => {
           return {
             category_name: cat.category_name || "ไม่ระบุหมวดหมู่",
@@ -235,27 +186,18 @@ export default function Dashboard() {
           };
         }).filter(cat => cat.category_name && cat.total > 0);
         
-        console.log("Processed category expenses:", processedCategoryExpenses);
-        
         if (processedCategoryExpenses.length > 0) {
-          // Create fixed colors for consistent display
           const colors = ['#2F584F', '#8CA29D', '#d1dad8', '#5D7D76', '#A5C6BE', '#404f4c'];
           
-          // Extract totals from category data
           const catLabels = processedCategoryExpenses.map(cat => cat.category_name);
           const catValues = processedCategoryExpenses.map(cat => cat.total);
           
-          // Calculate total for percentage calculation
           const totalValue = catValues.reduce((acc, val) => acc + val, 0);
           
-          // Calculate percentages
           const percentages = catValues.map(value => 
             totalValue > 0 ? Math.round((value / totalValue) * 100) : 0
           );
           
-          console.log("Category percentages:", percentages);
-          
-          // Prepare category data for the chart
           setCategoryData({
             labels: catLabels,
             datasets: [{
@@ -264,11 +206,9 @@ export default function Dashboard() {
             }]
           });
           
-          // Process budget data - in a real app, you'd have actual budget data
-          // Here we're simulating it by assuming budget is 130% of actual spending
           const budgetItems: BudgetItem[] = processedCategoryExpenses.map(cat => {
             const spent = cat.total;
-            const budget = Math.round(spent * 1.3); // 30% more than actual spending
+            const budget = Math.round(spent * 1.3);
             return {
               category: cat.category_name,
               budget,
@@ -279,8 +219,6 @@ export default function Dashboard() {
           
           setBudgetData(budgetItems);
         } else {
-          // No valid category data found
-          console.log("No valid category data found");
           setCategoryData({
             labels: ["ไม่มีข้อมูล"],
             datasets: [{
@@ -297,8 +235,6 @@ export default function Dashboard() {
           }]);
         }
       } else {
-        // No category expenses data found
-        console.log("No category expenses data found");
         setCategoryData({
           labels: ["ไม่มีข้อมูล"],
           datasets: [{
@@ -315,11 +251,7 @@ export default function Dashboard() {
         }]);
       }
       
-      console.log("Processing recent expenses...");
-      
-      // Process recent expenses from receipts
       const expenses: Expense[] = receiptsData.map(receipt => {
-        // Find category name by id
         const category = categoriesData.find(cat => cat.id === receipt.category_id);
         
         return {
@@ -333,9 +265,6 @@ export default function Dashboard() {
       
       setRecentExpenses(expenses);
       
-      console.log("Processing summary data...");
-      
-      // Calculate summary data
       const today = new Date();
       const todaysExpenses = receiptsData
         .filter(receipt => {
@@ -344,7 +273,6 @@ export default function Dashboard() {
         })
         .reduce((sum, receipt) => sum + receipt.amount, 0);
       
-      // Average daily spending based on monthly total
       const averageDaily = summary?.total_expense 
         ? Math.round(summary.total_expense / summary.receipt_count) 
         : 0;
@@ -355,29 +283,19 @@ export default function Dashboard() {
         averageDaily
       });
       
-      console.log("Processing category-specific data...");
-      
-      // Process category-specific expense data
-      // In a real app, you'd have API endpoints that return data per category
-      // Here we're simulating it based on overall data
       const categoryExpenseData: {[key: string]: TimeFrameData} = {};
       
-      // Add "all categories" data
       categoryExpenseData['all'] = { labels, values };
       
-      // For each category, create simulated data based on its percentage of the total
       if (Array.isArray(categoryExpenses) && categoryExpenses.length > 0) {
         const totalExpense = categoryExpenses.reduce((sum, cat) => sum + (cat.total || 0), 0);
         
         categoriesData.forEach(category => {
-          // Find this category in categoryExpenses
           const catData = categoryExpenses.find(cat => cat.category_name === category.name);
           const catTotal = catData ? catData.total : 0;
           
-          // Calculate this category's percentage of total expenses
           const percentage = totalExpense > 0 ? catTotal / totalExpense : 0;
           
-          // Apply percentage to overall values with slight randomness
           const categoryValues = values.map(value => {
             return Math.round(value * percentage * (0.9 + Math.random() * 0.2));
           });
@@ -391,15 +309,13 @@ export default function Dashboard() {
       
       setCategoryExpenseData(categoryExpenseData);
       
-      console.log("Data fetching complete!");
       setLoading(false);
       setError(null);
     } catch (err) {
       console.error("Error fetching dashboard data:", err);
       setError("ไม่สามารถโหลดข้อมูลได้ กรุณาลองใหม่อีกครั้ง");
       setLoading(false);
-      
-      // กำหนดค่าเริ่มต้นในกรณีที่เกิดข้อผิดพลาด
+
       setCategoryData({
         labels: ["ไม่มีข้อมูล"],
         datasets: [{

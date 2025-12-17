@@ -11,7 +11,6 @@ import { getReceiptById, getCategories, updateReceiptCategory } from '@/lib/api'
 import { format } from 'date-fns';
 import { th } from 'date-fns/locale';
 
-// Define interfaces for receipt data
 interface Receipt {
     id: number;
     email_subject: string;
@@ -53,15 +52,12 @@ export default function ReceiptDetail() {
             try {
                 setLoading(true);
                 
-                // ดึงข้อมูลหมวดหมู่
                 const categoriesData = await getCategories();
                 setCategories(categoriesData);
                 
-                // ดึงข้อมูลใบเสร็จ
                 const receiptData = await getReceiptById(parseInt(id));
                 setReceipt(receiptData);
                 
-                // ตั้งค่าหมวดหมู่ที่เลือกปัจจุบัน
                 if (receiptData.category_id) {
                     setSelectedCategory(receiptData.category_id.toString());
                 }
@@ -80,23 +76,19 @@ export default function ReceiptDetail() {
         }
     }, [id]);
 
-    // ฟังก์ชันอัปเดตหมวดหมู่ใบเสร็จ
     const handleUpdateCategory = async () => {
         if (!selectedCategory || !receipt) return;
         
         try {
             setUpdating(true);
             
-            // เรียกใช้ API สำหรับอัปเดตหมวดหมู่
             await updateReceiptCategory(receipt.id, parseInt(selectedCategory));
             
-            // อัปเดตข้อมูลใบเสร็จในหน้าปัจจุบัน
             setReceipt({
                 ...receipt,
                 category_id: parseInt(selectedCategory)
             });
             
-            // แสดงข้อความสำเร็จ
             setUpdateSuccess(true);
             setTimeout(() => setUpdateSuccess(false), 3000);
             
@@ -108,7 +100,6 @@ export default function ReceiptDetail() {
         }
     };
 
-    // ฟังก์ชันสำหรับแปลงรูปแบบวันที่เป็นไทย
     const formatDate = (dateStr: string): string => {
         try {
             const date = new Date(dateStr);

@@ -17,15 +17,12 @@ const LoggedMobileNavbar = () => {
     const [showSettingsMenu, setShowSettingsMenu] = useState(false);
     const [showEmailModal, setShowEmailModal] = useState(false);
     const settingsMenuRef = useRef<HTMLDivElement>(null);
-    // Move the usePathname hook inside the component
     const pathname = usePathname();
 
-    // Move the isActive function inside the component
     const isActive = (path: any) => {
         return pathname === path;
     };
 
-    // Close settings menu when clicking outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (settingsMenuRef.current && !settingsMenuRef.current.contains(event.target as Node)) {
@@ -40,15 +37,12 @@ const LoggedMobileNavbar = () => {
     }, []);
 
     const handleLogout = () => {
-        // Implement logout functionality here
         console.log('Logging out...');
-        // Redirect to login page or home page
         window.location.href = '/';
     };
 
     return (
         <div className='fixed bottom-0 left-0 right-0 z-50'>
-            {/* Toggle button that stays visible at the bottom */}
             <div className='flex justify-center'>
                 <button
                     onClick={() => setOpen(!open)}
@@ -105,7 +99,6 @@ const LoggedMobileNavbar = () => {
                 </ul>
             </div>
 
-            {/* Email Settings Modal */}
             <EmailSettingsModal
                 isOpen={showEmailModal}
                 onClose={() => setShowEmailModal(false)}

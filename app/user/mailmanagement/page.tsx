@@ -4,16 +4,10 @@ import Template from "@/components/Template";
 import { FaEdit, FaTrash, FaTag, FaTimes } from 'react-icons/fa';
 
 function mailmanagement() {
-    // State for modal visibility
     const [isModalOpen, setIsModalOpen] = useState(false);
-    
-    // State to track if we're editing or adding new email
     const [isEditing, setIsEditing] = useState(false);
-    
-    // State to track which email is being edited
     const [editingEmailId, setEditingEmailId] = useState<number | null>(null);
     
-    // State for form inputs
     const [newEmail, setNewEmail] = useState({
         title: '',
         sender: '',
@@ -21,7 +15,6 @@ function mailmanagement() {
         category: 'ช็อปปิ้ง'
     });
     
-    // Sample email data
     const [emailData, setEmailData] = useState([
         {
             id: 1,
@@ -57,7 +50,6 @@ function mailmanagement() {
         }
     ]);
 
-    // Handle input changes
     const handleInputChange = (e:any) => {
         const { name, value } = e.target;
         setNewEmail(prev => ({
@@ -66,7 +58,6 @@ function mailmanagement() {
         }));
     };
 
-    // Handle edit button click
     const handleEditClick = (id: number) => {
         const emailToEdit = emailData.find(email => email.id === id);
         if (emailToEdit) {
@@ -82,12 +73,10 @@ function mailmanagement() {
         }
     };
 
-    // Handle form submission
     const handleSubmit = (e:any) => {
         e.preventDefault();
         
         if (isEditing && editingEmailId !== null) {
-            // Update existing email
             setEmailData(emailData.map(email => {
                 if (email.id === editingEmailId) {
                     return {
@@ -101,7 +90,6 @@ function mailmanagement() {
                 return email;
             }));
         } else {
-            // Create new email object
             const currentDate = new Date();
             const formattedDate = `${currentDate.getDate()} ${['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'][currentDate.getMonth()]} ${currentDate.getFullYear() + 543}`;
             
@@ -114,11 +102,9 @@ function mailmanagement() {
                 date: formattedDate
             };
             
-            // Add to email data
             setEmailData([...emailData, newEmailEntry]);
         }
         
-        // Reset form and close modal
         setNewEmail({
             title: '',
             sender: '',
@@ -130,7 +116,6 @@ function mailmanagement() {
         setIsModalOpen(false);
     };
 
-    // Handle delete
     const handleDelete = (id:any) => {
         setEmailData(emailData.filter(email => email.id !== id));
     };

@@ -21,7 +21,6 @@ const FAQPage = () => {
           </div>
 
           <div className="space-y-8">
-            {/* ความปลอดภัยของข้อมูล */}
             <Card className="bg-white border-gray-200  py-7">
               <CardHeader>
                 <CardTitle className="text-2xl text-[#2F584F] flex items-center">
@@ -50,7 +49,6 @@ const FAQPage = () => {
               </CardContent>
             </Card>
 
-            {/* การใช้งานทั่วไป */}
             <Card className="bg-white border-gray-200  py-7">
               <CardHeader>
                 <CardTitle className="text-2xl text-[#2F584F] flex items-center">
@@ -79,7 +77,6 @@ const FAQPage = () => {
               </CardContent>
             </Card>
 
-            {/* งบประมาณและการวางแผน */}
             <Card className="bg-white border-gray-200  py-7">
               <CardHeader>
                 <CardTitle className="text-2xl text-[#2F584F] flex items-center">
@@ -113,7 +110,6 @@ const FAQPage = () => {
               </CardContent>
             </Card>
 
-            {/* เคล็ดลับการใช้งาน */}
             <Card className="bg-gradient-to-r from-[#f0f7f5] to-[#e8f0ee] border border-[#d0e0dc]  py-7">
               <CardHeader>
                 <CardTitle className="text-2xl text-[#2F584F] flex items-center">

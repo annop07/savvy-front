@@ -31,7 +31,6 @@ const MobileNavbar = () => {
     setIsRegisterModalOpen(false);
   };
 
-  // Listen for custom events to switch between modals
   useEffect(() => {
     const handleOpenLoginModal = () => {
       setIsLoginModalOpen(true);
@@ -54,14 +53,12 @@ const MobileNavbar = () => {
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 bg-transparent px-6 py-4 md:hidden">
         <div className="flex items-center justify-between">
-          {/* Logo on the left */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center">
               <span className="text-3xl font-bold tracking-tight bg-gradient-to-r from-[#2F584F] to-[#8CA29D] bg-clip-text text-transparent hover:from-[#8CA29D] hover:to-[#2F584F] transition-all duration-300">savvy</span>
             </Link>
           </div>
 
-          {/* Hamburger menu button */}
           <button
             onClick={toggleMenu}
             className="text-[#8CA29D] hover:text-[#2F584F] focus:outline-none transition-colors duration-300"
@@ -93,7 +90,6 @@ const MobileNavbar = () => {
           </button>
         </div>
 
-        {/* Mobile menu dropdown */}
         {isMenuOpen && (
           <div className="absolute top-full left-0 right-0 bg-white mt-1 py-4 px-6 rounded-b-lg shadow-lg">
             <div className="flex flex-col space-y-4">
@@ -135,7 +131,6 @@ const MobileNavbar = () => {
         )}
       </nav>
 
-      {/* Auth Modals */}
       <LoginModal
         isOpen={isLoginModalOpen}
         onClose={closeLoginModal}

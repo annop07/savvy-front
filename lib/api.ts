@@ -1,7 +1,6 @@
 ﻿import axios from 'axios';
 import { BudgetCreate } from '@/types/budget';
 
-// สร้าง axios instance สำหรับเรียกใช้งาน API
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
 
 const apiClient = axios.create({
@@ -11,7 +10,7 @@ const apiClient = axios.create({
     },
 });
 
-// Interceptor สำหรับการเพิ่ม access token ในทุก request
+// Interceptor: เพิ่ม access token ในทุก request
 apiClient.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('access_token');
@@ -23,7 +22,6 @@ apiClient.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
-// ฟังก์ชันสำหรับจัดการการล็อกอิน
 export const loginUser = async (email: string, password: string) => {
     const formData = new URLSearchParams();
     formData.append('username', email);
@@ -36,7 +34,6 @@ export const loginUser = async (email: string, password: string) => {
             },
         });
 
-        // บันทึก token ลงใน localStorage
         localStorage.setItem('access_token', response.data.access_token);
         return response.data;
     } catch (error) {
@@ -44,7 +41,6 @@ export const loginUser = async (email: string, password: string) => {
     }
 };
 
-// ฟังก์ชันสำหรับการลงทะเบียนผู้ใช้ใหม่
 export const registerUser = async (userData: {
     username: string,
     email: string,
@@ -59,7 +55,6 @@ export const registerUser = async (userData: {
     }
 };
 
-// ฟังก์ชันสำหรับดึงข้อมูลผู้ใช้ปัจจุบัน
 export const getCurrentUser = async () => {
     try {
         const response = await apiClient.get('/users/me');
@@ -69,7 +64,6 @@ export const getCurrentUser = async () => {
     }
 };
 
-// ฟังก์ชันสำหรับดึงรายการใบเสร็จ
 export const getReceipts = async (params: {
     skip?: number,
     limit?: number,
@@ -88,7 +82,6 @@ export const getReceipts = async (params: {
     }
 };
 
-// ฟังก์ชันสำหรับดึงข้อมูลใบเสร็จเดียว
 export const getReceiptById = async (receiptId: number) => {
     try {
         const response = await apiClient.get(`/receipts/${receiptId}`);
@@ -98,7 +91,6 @@ export const getReceiptById = async (receiptId: number) => {
     }
 };
 
-// ฟังก์ชันสำหรับอัปเดตหมวดหมู่ของใบเสร็จ
 export const updateReceiptCategory = async (receiptId: number, categoryId: number) => {
     try {
         const response = await apiClient.put(`/receipts/${receiptId}/category`, { category_id: categoryId });
@@ -108,7 +100,6 @@ export const updateReceiptCategory = async (receiptId: number, categoryId: numbe
     }
 };
 
-// ฟังก์ชันสำหรับดึงรายการหมวดหมู่
 export const getCategories = async () => {
     try {
         const response = await apiClient.get('/categories');
@@ -118,7 +109,6 @@ export const getCategories = async () => {
     }
 };
 
-// ฟังก์ชันสำหรับตั้งค่า IMAP
 export const createImapSetting = async (imapData: {
     email: string,
     server: string,
@@ -136,7 +126,6 @@ export const createImapSetting = async (imapData: {
     }
 };
 
-// ฟังก์ชันสำหรับดึงการตั้งค่า IMAP
 export const getImapSettings = async () => {
     try {
         const response = await apiClient.get('/imap-settings');
@@ -146,7 +135,6 @@ export const getImapSettings = async () => {
     }
 };
 
-// ฟังก์ชันสำหรับซิงค์อีเมล
 export const syncEmails = async (imapSettingId: number, daysBack: number = 30, limit: number = 50) => {
     try {
         const response = await apiClient.post(`/imap-settings/${imapSettingId}/sync`, null, {
@@ -158,7 +146,6 @@ export const syncEmails = async (imapSettingId: number, daysBack: number = 30, l
     }
 };
 
-// ฟังก์ชันสำหรับดึงข้อมูลวิเคราะห์
 export const getAnalyticsSummary = async () => {
     try {
         const response = await apiClient.get('/analytics/summary');
@@ -214,7 +201,6 @@ export const getBudgets = async (month?: number, year?: number) => {
     }
 };
 
-// ฟังก์ชันสำหรับสร้างงบประมาณใหม่
 export const createBudget = async (budgetData: BudgetCreate) => {
     try {
         const response = await apiClient.post('/budgets', budgetData);
@@ -224,7 +210,6 @@ export const createBudget = async (budgetData: BudgetCreate) => {
     }
 };
 
-// ฟังก์ชันสำหรับอัปเดตงบประมาณ
 export const updateBudget = async (budgetId: number, budgetData: Partial<BudgetCreate>) => {
     try {
         const response = await apiClient.put(`/budgets/${budgetId}`, budgetData);
@@ -234,7 +219,6 @@ export const updateBudget = async (budgetId: number, budgetData: Partial<BudgetC
     }
 };
 
-// ฟังก์ชันสำหรับลบงบประมาณ
 export const deleteBudget = async (budgetId: number) => {
     try {
         const response = await apiClient.delete(`/budgets/${budgetId}`);
@@ -244,7 +228,6 @@ export const deleteBudget = async (budgetId: number) => {
     }
 };
 
-// ฟังก์ชันสำหรับดึงข้อมูลค่าใช้จ่ายเทียบกับงบประมาณ
 export const getBudgetComparisons = async (month?: number, year?: number) => {
     try {
         const params: any = {};

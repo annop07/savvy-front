@@ -21,12 +21,10 @@ function Budgetmanage() {
   const [confirmDelete, setConfirmDelete] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState<'summary' | 'details'>('details');
   
-  // ใช้เดือนและปีปัจจุบัน
   const now = new Date();
-  const [selectedMonth, setSelectedMonth] = useState(now.getMonth() + 1); // เดือนปัจจุบัน (1-12)
-  const [selectedYear, setSelectedYear] = useState(now.getFullYear());    // ปีปัจจุบัน
+  const [selectedMonth, setSelectedMonth] = useState(now.getMonth() + 1);
+  const [selectedYear, setSelectedYear] = useState(now.getFullYear());
   
-  // ดึงข้อมูลงบประมาณ
   useEffect(() => {
     fetchBudgetData();
   }, [selectedMonth, selectedYear]);
@@ -45,7 +43,6 @@ function Budgetmanage() {
     }
   };
   
-  // คำนวณสรุปงบประมาณ
   const calculateSummary = () => {
     const totalBudget = budgetData.reduce((sum, item) => sum + item.amount, 0);
     const totalSpent = budgetData.reduce((sum, item) => sum + item.spent, 0);
@@ -57,7 +54,6 @@ function Budgetmanage() {
     return { totalBudget, totalSpent, totalRemaining, averagePercentage };
   };
   
-  // ลบงบประมาณ
   const handleDeleteBudget = async (budgetId: number) => {
     try {
       await deleteBudget(budgetId);
@@ -74,34 +70,28 @@ function Budgetmanage() {
     }
   };
   
-  // เปิดฟอร์มแก้ไข
   const handleEditBudget = (budget: BudgetWithSpent) => {
     setSelectedBudget(budget);
     setShowEditModal(true);
   };
   
-  // เปิดฟอร์มเพิ่มใหม่
   const handleAddBudget = () => {
     setShowAddModal(true);
   };
   
-  // ชื่อเดือนภาษาไทย
   const monthNames = [
     "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", 
     "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
   ];
   
-  // คำนวณสรุป
   const summary = calculateSummary();
 
-  // Determine progress bar color based on percentage
   const getProgressBarColor = (percentage: number) => {
-    if (percentage < 60) return 'bg-emerald-500'; // สีเขียวมรกต
-    if (percentage < 80) return 'bg-amber-500'; // สีเหลืองอำพัน
-    return 'bg-rose-500'; // สีชมพูเข้ม
+    if (percentage < 60) return 'bg-emerald-500';
+    if (percentage < 80) return 'bg-amber-500';
+    return 'bg-rose-500';
   };
 
-  // ฟังก์ชันโหลดข้อมูลใหม่พร้อมเอฟเฟกต์
   const handleRefresh = () => {
     setLoading(true);
     fetchBudgetData();
@@ -110,7 +100,6 @@ function Budgetmanage() {
   return (
     <Template>
       <div className="bg-white rounded-xl overflow-hidden shadow-sm">
-        {/* Header Section with background gradient */}
         <div className="bg-gradient-to-r from-[#2F584F] to-[#4a6f68] text-white p-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
             <div className="flex items-center mb-4 md:mb-0">
@@ -130,7 +119,6 @@ function Budgetmanage() {
             </Button>
           </div>
 
-          {/* Navigation tabs */}
           <div className="flex mt-8 border-b border-white/20">
             <button
               className={`px-4 py-2 font-medium text-sm mr-4 ${

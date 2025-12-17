@@ -1,7 +1,6 @@
 "use client";
 import React from 'react';
 
-// Custom Budget progress bar component for budget management page only
 interface BudgetBarCustomProps {
   category: string;
   budget: number;
