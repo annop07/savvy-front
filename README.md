@@ -5,6 +5,9 @@ The system allows users to configure their IMAP email accounts, automatically fe
 The backend handles authentication, receipt processing, IMAP synchronization, analytics, and budget management, while the frontend provides dashboards, receipt views, and interactive expense analysis for users.
 (System-oriented full-stack web application project)
 
+## Backend 
+https://github.com/annop07/IMAP-Network.git
+
 ## Screenshots
 
 ### First Pages
@@ -17,7 +20,7 @@ The backend handles authentication, receipt processing, IMAP synchronization, an
 ![Recipet List](public/savy-photo/recipet-list.png)
 
 ### Recipet Detail
-![Recipet Detail](public/savy-photo/recipet-detail.png)
+![Recipet Detail](public/savy-photo/receipt-detail.png)
 
 ### Manage Money
 ![Manage Money](public/savy-photo/manage-money.png)
